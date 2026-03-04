@@ -1,9 +1,613 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 	<head>
-		<title>All Recipes</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>All Recipes - Dishare</title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
+			body {
+				font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+				background-color: #f5f7fa;
+			}
+
+			/* Navigation Bar */
+			.navbar {
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				padding: 15px 30px;
+				box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+				position: sticky;
+				top: 0;
+				z-index: 100;
+			}
+
+			.navbar h2 {
+				color: white;
+				font-size: 20px;
+				font-weight: 600;
+			}
+
+			/* Main Container */
+			.container {
+				max-width: 1200px;
+				margin: 40px auto;
+				padding: 0 20px;
+			}
+
+			.header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 30px;
+			}
+
+			.header h1 {
+				color: #333;
+				font-size: 32px;
+			}
+
+			.filter-section {
+				display: flex;
+				gap: 15px;
+				margin-bottom: 20px;
+				flex-wrap: wrap;
+			}
+
+			.search-box {
+				flex: 1;
+				min-width: 200px;
+			}
+
+			.search-box input {
+				width: 100%;
+				padding: 12px 16px;
+				border: 1px solid #ddd;
+				border-radius: 4px;
+				font-size: 14px;
+				transition: border-color 0.3s;
+			}
+
+			.search-box input:focus {
+				outline: none;
+				border-color: #667eea;
+				box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+			}
+
+			.sort-section {
+				display: flex;
+				gap: 10px;
+				align-items: center;
+			}
+
+			.sort-section select {
+				padding: 10px 14px;
+				border: 1px solid #ddd;
+				border-radius: 4px;
+				font-size: 14px;
+				cursor: pointer;
+				background: white;
+			}
+
+			/* Table Styling */
+			.table-container {
+				background: white;
+				border-radius: 8px;
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+				overflow: hidden;
+				margin-bottom: 30px;
+			}
+
+			.table-header {
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				padding: 20px 30px;
+			}
+
+			.table-header h2 {
+				color: white;
+				font-size: 18px;
+				margin: 0;
+			}
+
+			table {
+				width: 100%;
+				border-collapse: collapse;
+			}
+
+			thead tr {
+				background: #f0f2f5;
+				border-bottom: 2px solid #e0e0e0;
+			}
+
+			th {
+				padding: 16px 30px;
+				text-align: left;
+				color: #666;
+				font-weight: 600;
+				font-size: 13px;
+				text-transform: uppercase;
+			}
+
+			td {
+				padding: 18px 30px;
+				border-bottom: 1px solid #e0e0e0;
+				color: #333;
+			}
+
+			tbody tr {
+				transition: background-color 0.2s;
+			}
+
+			tbody tr:hover {
+				background-color: #f9f9f9;
+			}
+
+			.recipe-name {
+				font-weight: 500;
+				color: #333;
+				font-size: 15px;
+			}
+
+			.author-name {
+				color: #667eea;
+				font-weight: 500;
+				font-size: 14px;
+			}
+
+			.post-date {
+				color: #999;
+				font-size: 14px;
+			}
+
+			.action-buttons {
+				display: flex;
+				gap: 10px;
+			}
+
+			.btn {
+				padding: 8px 16px;
+				border: none;
+				border-radius: 4px;
+				cursor: pointer;
+				font-size: 13px;
+				font-weight: 600;
+				transition: all 0.2s;
+				text-decoration: none;
+				display: inline-block;
+			}
+
+			.btn-view {
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				color: white;
+			}
+
+			.btn-view:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+			}
+
+			.btn-view:active {
+				transform: translateY(0);
+			}
+
+			/* Pagination */
+			.pagination-container {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				gap: 15px;
+				margin-top: 30px;
+				padding: 20px;
+				background: white;
+				border-radius: 8px;
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+			}
+
+			.pagination {
+				display: flex;
+				justify-content: center;
+				gap: 8px;
+				flex-wrap: wrap;
+			}
+
+			.pagination a,
+			.pagination span {
+				padding: 10px 14px;
+				border-radius: 4px;
+				border: 1px solid #ddd;
+				color: #667eea;
+				text-decoration: none;
+				cursor: pointer;
+				transition: all 0.2s;
+				font-size: 14px;
+				font-weight: 500;
+			}
+
+			.pagination a:hover {
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				color: white;
+				border-color: #667eea;
+			}
+
+			.pagination .active {
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				color: white;
+				border-color: #667eea;
+				cursor: default;
+			}
+
+			.pagination .disabled {
+				color: #bbb;
+				cursor: not-allowed;
+				background: #f5f5f5;
+			}
+
+			.pagination .disabled:hover {
+				background: #f5f5f5;
+				transform: none;
+			}
+
+			.page-info {
+				color: #666;
+				font-size: 14px;
+				font-weight: 500;
+				white-space: nowrap;
+			}
+
+			/* Empty State */
+			.empty-state {
+				text-align: center;
+				padding: 60px 20px;
+				color: #999;
+			}
+
+			.empty-state h3 {
+				font-size: 20px;
+				margin-bottom: 10px;
+				color: #666;
+			}
+
+			/* Responsive Design */
+			@media (max-width: 768px) {
+				.header {
+					flex-direction: column;
+					align-items: flex-start;
+				}
+
+				.container {
+					margin: 20px auto;
+				}
+
+				.filter-section {
+					flex-direction: column;
+				}
+
+				.search-box {
+					min-width: 100%;
+				}
+
+				.sort-section {
+					width: 100%;
+				}
+
+				.sort-section select {
+					flex: 1;
+				}
+
+				th, td {
+					padding: 12px 16px;
+					font-size: 13px;
+				}
+
+				.table-header {
+					padding: 15px 20px;
+				}
+
+				.header h1 {
+					font-size: 24px;
+				}
+
+				.action-buttons {
+					flex-direction: column;
+				}
+
+				.btn {
+					width: 100%;
+					text-align: center;
+				}
+
+				.pagination-container {
+					flex-direction: column;
+					gap: 20px;
+				}
+
+				.pagination {
+					justify-content: center;
+				}
+			}
+		</style>
 	</head>
 	<body>
-		<h1>All recipes</h1>
+		<!-- Navigation Bar -->
+		<div class="navbar">
+			<h2>🍳 Dishare Recipes</h2>
+		</div>
+
+		<!-- Main Container -->
+		<div class="container">
+			<div class="header">
+				<h1>All Recipes</h1>
+			</div>
+
+			<!-- Filter Section -->
+			<div class="filter-section">
+				<div class="search-box">
+					<input type="text" id="searchInput" placeholder="Search recipes...">
+				</div>
+				<div class="sort-section">
+					<label for="sortBy" style="color: #666; font-weight: 500;">Sort by:</label>
+					<select id="sortBy">
+						<option value="recent">Most Recent</option>
+						<option value="oldest">Oldest First</option>
+						<option value="name">Recipe Name (A-Z)</option>
+						<option value="author">Author Name (A-Z)</option>
+					</select>
+				</div>
+			</div>
+
+			<!-- Recipes Table -->
+			<div class="table-container">
+				<div class="table-header">
+					<h2>Recipe List</h2>
+				</div>
+				<table id="recipesTable">
+					<thead>
+						<tr>
+							<th>Recipe Name</th>
+							<th>Author</th>
+							<th>Posted Date</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody id="tableBody">
+						<!-- Table rows will be populated by JavaScript -->
+					</tbody>
+				</table>
+			</div>
+
+			<!-- Pagination -->
+			<div class="pagination-container">
+				<span class="page-info">
+					Showing <span id="startEntry">1</span>-<span id="endEntry">20</span> of <span id="totalEntries">52</span> recipes
+				</span>
+				<div class="pagination" id="paginationControls">
+					<!-- Pagination buttons will be populated by JavaScript -->
+				</div>
+			</div>
+		</div>
+
+		<script>
+			// Sample recipe data (52 recipes for demonstration)
+			const recipesData = [
+				{ id: 1, name: 'Spaghetti Carbonara', author: 'Marco Rossi', date: '2026-03-04' },
+				{ id: 2, name: 'Margherita Pizza', author: 'Isabella Romano', date: '2026-03-03' },
+				{ id: 3, name: 'Pad Thai', author: 'Somchai Tanaka', date: '2026-03-02' },
+				{ id: 4, name: 'Chicken Tikka Masala', author: 'Priya Sharma', date: '2026-03-01' },
+				{ id: 5, name: 'Beef Tacos', author: 'Carlos Martinez', date: '2026-02-28' },
+				{ id: 6, name: 'Caesar Salad', author: 'John Smith', date: '2026-02-27' },
+				{ id: 7, name: 'Chocolate Cake', author: 'Emma Wilson', date: '2026-02-26' },
+				{ id: 8, name: 'Fish and Chips', author: 'James Brown', date: '2026-02-25' },
+				{ id: 9, name: 'Beef Stew', author: 'Michael Johnson', date: '2026-02-24' },
+				{ id: 10, name: 'Minestrone Soup', author: 'Lucia Ferrari', date: '2026-02-23' },
+				{ id: 11, name: 'Grilled Salmon', author: 'Anne Laurent', date: '2026-02-22' },
+				{ id: 12, name: 'Thai Green Curry', author: 'Niran Chandra', date: '2026-02-21' },
+				{ id: 13, name: 'Falafel Wrap', author: 'Ahmed Hassan', date: '2026-02-20' },
+				{ id: 14, name: 'Risotto Mushroom', author: 'Paolo Gavi', date: '2026-02-19' },
+				{ id: 15, name: 'Moussaka', author: 'Sophia Papadopoulos', date: '2026-02-18' },
+				{ id: 16, name: 'Korean Bibimbap', author: 'Min Ji Park', date: '2026-02-17' },
+				{ id: 17, name: 'Butter Chicken', author: 'Raj Patel', date: '2026-02-16' },
+				{ id: 18, name: 'Pasta Primavera', author: 'Giulia Morelli', date: '2026-02-15' },
+				{ id: 19, name: 'Vegetable Stir Fry', author: 'Wei Chen', date: '2026-02-14' },
+				{ id: 20, name: 'Beef Burgers', author: 'Dave Thompson', date: '2026-02-13' },
+				{ id: 21, name: 'Laksa Soup', author: 'Maya Krishnan', date: '2026-02-12' },
+				{ id: 22, name: 'Chiles Rellenos', author: 'Rosa Garcia', date: '2026-02-11' },
+				{ id: 23, name: 'Paella Seafood', author: 'Diego Rodriguez', date: '2026-02-10' },
+				{ id: 24, name: 'Coq au Vin', author: 'Jean Dupont', date: '2026-02-09' },
+				{ id: 25, name: 'Ceviche', author: 'Carlos Mendez', date: '2026-02-08' },
+				{ id: 26, name: 'Miso Soup', author: 'Yuki Yamamoto', date: '2026-02-07' },
+				{ id: 27, name: 'Ramen Noodles', author: 'Takeshi Sato', date: '2026-02-06' },
+				{ id: 28, name: 'Shawarma', author: 'Omar Al-Rashid', date: '2026-02-05' },
+				{ id: 29, name: 'Goulash', author: 'Eva Kovacs', date: '2026-02-04' },
+				{ id: 30, name: 'Pierogi', author: 'Anna Kowalski', date: '2026-02-03' },
+				{ id: 31, name: 'Tandoori Chicken', author: 'Arun Singh', date: '2026-02-02' },
+				{ id: 32, name: 'Schnitzel', author: 'Hans Mueller', date: '2026-02-01' },
+				{ id: 33, name: 'Feta Salad', author: 'Christina Vasilis', date: '2026-01-31' },
+				{ id: 34, name: 'Peking Duck', author: 'Li Wei', date: '2026-01-30' },
+				{ id: 35, name: 'Bouillabaisse', author: 'Pierre Leclerc', date: '2026-01-29' },
+				{ id: 36, name: 'Gumbo', author: 'Jasmine Cooper', date: '2026-01-28' },
+				{ id: 37, name: 'Fajitas', author: 'Miguel Santos', date: '2026-01-27' },
+				{ id: 38, name: 'Satay Chicken', author: 'Budi Santoso', date: '2026-01-26' },
+				{ id: 39, name: 'Bibimbap', author: 'Ji-hoon Park', date: '2026-01-25' },
+				{ id: 40, name: 'Tonkatsu', author: 'Hideo Nakamura', date: '2026-01-24' },
+				{ id: 41, name: 'Souvlaki', author: 'Dimitri Papadimitriou', date: '2026-01-23' },
+				{ id: 42, name: 'Kebab', author: 'Mustafa Yilmaz', date: '2026-01-22' },
+				{ id: 43, name: 'Hummus Plate', author: 'Leila Mansour', date: '2026-01-21' },
+				{ id: 44, name: 'Pasta Carbonara', author: 'Antonio Sabato', date: '2026-01-20' },
+				{ id: 45, name: 'Shepherd\'s Pie', author: 'Margaret O\'Brien', date: '2026-01-19' },
+				{ id: 46, name: 'Tagine Chicken', author: 'Fatima Al-Zahara', date: '2026-01-18' },
+				{ id: 47, name: 'Empanadas', author: 'Fernando Lopez', date: '2026-01-17' },
+				{ id: 48, name: 'Tom Yum Soup', author: 'Porn Chutiwat', date: '2026-01-16' },
+				{ id: 49, name: 'Spring Rolls', author: 'Linh Nguyen', date: '2026-01-15' },
+				{ id: 50, name: 'Borscht', author: 'Yuri Volkov', date: '2026-01-14' },
+				{ id: 51, name: 'Gyros', author: 'George Papadakis', date: '2026-01-13' },
+				{ id: 52, name: 'Baklava', author: 'Aisha Al-Mansouri', date: '2026-01-12' }
+			];
+
+			const ENTRIES_PER_PAGE = 20;
+			let currentPage = 1;
+			let filteredRecipes = [...recipesData];
+
+			// Initialize the page
+			function initializeTable() {
+				displayTable();
+				setupPagination();
+			}
+
+			// Display table rows
+			function displayTable() {
+				const startIndex = (currentPage - 1) * ENTRIES_PER_PAGE;
+				const endIndex = startIndex + ENTRIES_PER_PAGE;
+				const pageRecipes = filteredRecipes.slice(startIndex, endIndex);
+
+				const tableBody = document.getElementById('tableBody');
+				tableBody.innerHTML = '';
+
+				if (pageRecipes.length === 0) {
+					tableBody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 40px;">No recipes found</td></tr>';
+					return;
+				}
+
+				pageRecipes.forEach((recipe) => {
+					const row = `
+						<tr>
+							<td class="recipe-name">${escapeHtml(recipe.name)}</td>
+							<td class="author-name">${escapeHtml(recipe.author)}</td>
+							<td class="post-date">${formatDate(recipe.date)}</td>
+							<td class="action-buttons">
+								<button class="btn btn-view" onclick="viewRecipe(${recipe.id})">View Recipe</button>
+							</td>
+						</tr>
+					`;
+					tableBody.innerHTML += row;
+				});
+
+				// Update pagination info
+				document.getElementById('startEntry').textContent = startIndex + 1;
+				document.getElementById('endEntry').textContent = Math.min(endIndex, filteredRecipes.length);
+				document.getElementById('totalEntries').textContent = filteredRecipes.length;
+			}
+
+			// Setup pagination controls
+			function setupPagination() {
+				const totalPages = Math.ceil(filteredRecipes.length / ENTRIES_PER_PAGE);
+				const paginationControls = document.getElementById('paginationControls');
+				paginationControls.innerHTML = '';
+
+				// Previous button
+				if (currentPage > 1) {
+					const prevBtn = `<a href="#" onclick="goToPage(${currentPage - 1}); return false;">← Previous</a>`;
+					paginationControls.innerHTML += prevBtn;
+				} else {
+					paginationControls.innerHTML += '<span class="disabled">← Previous</span>';
+				}
+
+				// Page numbers
+				const maxVisiblePages = 5;
+				let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+				let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+				startPage = Math.max(1, endPage - maxVisiblePages + 1);
+
+				if (startPage > 1) {
+					paginationControls.innerHTML += '<a href="#" onclick="goToPage(1); return false;">1</a>';
+					if (startPage > 2) {
+						paginationControls.innerHTML += '<span style="color: #999;">...</span>';
+					}
+				}
+
+				for (let i = startPage; i <= endPage; i++) {
+					if (i === currentPage) {
+						paginationControls.innerHTML += `<span class="active">${i}</span>`;
+					} else {
+						paginationControls.innerHTML += `<a href="#" onclick="goToPage(${i}); return false;">${i}</a>`;
+					}
+				}
+
+				if (endPage < totalPages) {
+					if (endPage < totalPages - 1) {
+						paginationControls.innerHTML += '<span style="color: #999;">...</span>';
+					}
+					paginationControls.innerHTML += `<a href="#" onclick="goToPage(${totalPages}); return false;">${totalPages}</a>`;
+				}
+
+				// Next button
+				if (currentPage < totalPages) {
+					const nextBtn = `<a href="#" onclick="goToPage(${currentPage + 1}); return false;">Next →</a>`;
+					paginationControls.innerHTML += nextBtn;
+				} else {
+					paginationControls.innerHTML += '<span class="disabled">Next →</span>';
+				}
+			}
+
+			// Go to specific page
+			function goToPage(page) {
+				const totalPages = Math.ceil(filteredRecipes.length / ENTRIES_PER_PAGE);
+				if (page >= 1 && page <= totalPages) {
+					currentPage = page;
+					displayTable();
+					setupPagination();
+					window.scrollTo(0, 0);
+				}
+			}
+
+			// View recipe
+			function viewRecipe(id) {
+				console.log('Viewing recipe with ID:', id);
+				// Replace with actual navigation
+				// window.location.href = '/recipe/' + id;
+			}
+
+			// Search functionality
+			document.getElementById('searchInput').addEventListener('input', function(e) {
+				const searchTerm = e.target.value.toLowerCase();
+				filteredRecipes = recipesData.filter(recipe => 
+					recipe.name.toLowerCase().includes(searchTerm) ||
+					recipe.author.toLowerCase().includes(searchTerm)
+				);
+				currentPage = 1;
+				displayTable();
+				setupPagination();
+			});
+
+			// Sort functionality
+			document.getElementById('sortBy').addEventListener('change', function(e) {
+				const sortType = e.target.value;
+				filteredRecipes.sort((a, b) => {
+					switch(sortType) {
+						case 'recent':
+							return new Date(b.date) - new Date(a.date);
+						case 'oldest':
+							return new Date(a.date) - new Date(b.date);
+						case 'name':
+							return a.name.localeCompare(b.name);
+						case 'author':
+							return a.author.localeCompare(b.author);
+						default:
+							return 0;
+					}
+				});
+				currentPage = 1;
+				displayTable();
+				setupPagination();
+			});
+
+			// Helper function to format date
+			function formatDate(dateString) {
+				const options = { year: 'numeric', month: 'short', day: 'numeric' };
+				return new Date(dateString).toLocaleDateString('en-US', options);
+			}
+
+			// Helper function to escape HTML
+			function escapeHtml(text) {
+				const map = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'};
+				return text.replace(/[&<>"']/g, m => map[m]);
+			}
+
+			// Initialize on load
+			window.addEventListener('DOMContentLoaded', initializeTable);
+		</script>
 	</body>
 </html>

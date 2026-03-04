@@ -1,9 +1,532 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 	<head>
-		<title>All Users</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>All Users - Dishare</title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
+			body {
+				font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+				background-color: #f5f7fa;
+			}
+
+			/* Navigation Bar */
+			.navbar {
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				padding: 15px 30px;
+				box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+				position: sticky;
+				top: 0;
+				z-index: 100;
+			}
+
+			.navbar h2 {
+				color: white;
+				font-size: 20px;
+				font-weight: 600;
+			}
+
+			/* Main Container */
+			.container {
+				max-width: 1200px;
+				margin: 40px auto;
+				padding: 0 20px;
+			}
+
+			.header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 30px;
+			}
+
+			.header h1 {
+				color: #333;
+				font-size: 32px;
+			}
+
+			.filter-section {
+				display: flex;
+				gap: 15px;
+				margin-bottom: 20px;
+				flex-wrap: wrap;
+			}
+
+			.search-box {
+				flex: 1;
+				min-width: 200px;
+			}
+
+			.search-box input {
+				width: 100%;
+				padding: 12px 16px;
+				border: 1px solid #ddd;
+				border-radius: 4px;
+				font-size: 14px;
+				transition: border-color 0.3s;
+			}
+
+			.search-box input:focus {
+				outline: none;
+				border-color: #667eea;
+				box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+			}
+
+			/* Table Styling */
+			.table-container {
+				background: white;
+				border-radius: 8px;
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+				overflow: hidden;
+				margin-bottom: 30px;
+			}
+
+			.table-header {
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				padding: 20px 30px;
+			}
+
+			.table-header h2 {
+				color: white;
+				font-size: 18px;
+				margin: 0;
+			}
+
+			table {
+				width: 100%;
+				border-collapse: collapse;
+			}
+
+			thead tr {
+				background: #f0f2f5;
+				border-bottom: 2px solid #e0e0e0;
+			}
+
+			th {
+				padding: 16px 30px;
+				text-align: left;
+				color: #666;
+				font-weight: 600;
+				font-size: 13px;
+				text-transform: uppercase;
+			}
+
+			td {
+				padding: 18px 30px;
+				border-bottom: 1px solid #e0e0e0;
+				color: #333;
+			}
+
+			tbody tr {
+				transition: background-color 0.2s;
+			}
+
+			tbody tr:hover {
+				background-color: #f9f9f9;
+			}
+
+			.user-name {
+				font-weight: 500;
+				color: #333;
+				font-size: 15px;
+			}
+
+			.action-buttons {
+				display: flex;
+				gap: 10px;
+			}
+
+			.btn {
+				padding: 8px 16px;
+				border: none;
+				border-radius: 4px;
+				cursor: pointer;
+				font-size: 13px;
+				font-weight: 600;
+				transition: all 0.2s;
+				text-decoration: none;
+				display: inline-block;
+			}
+
+			.btn-view {
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				color: white;
+			}
+
+			.btn-view:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+			}
+
+			.btn-view:active {
+				transform: translateY(0);
+			}
+
+			/* Pagination */
+			.pagination-container {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				gap: 15px;
+				margin-top: 30px;
+				padding: 20px;
+				background: white;
+				border-radius: 8px;
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+			}
+
+			.pagination {
+				display: flex;
+				justify-content: center;
+				gap: 8px;
+				flex-wrap: wrap;
+			}
+
+			.pagination a,
+			.pagination span {
+				padding: 10px 14px;
+				border-radius: 4px;
+				border: 1px solid #ddd;
+				color: #667eea;
+				text-decoration: none;
+				cursor: pointer;
+				transition: all 0.2s;
+				font-size: 14px;
+				font-weight: 500;
+			}
+
+			.pagination a:hover {
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				color: white;
+				border-color: #667eea;
+			}
+
+			.pagination .active {
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				color: white;
+				border-color: #667eea;
+				cursor: default;
+			}
+
+			.pagination .disabled {
+				color: #bbb;
+				cursor: not-allowed;
+				background: #f5f5f5;
+			}
+
+			.pagination .disabled:hover {
+				background: #f5f5f5;
+				transform: none;
+			}
+
+			.page-info {
+				color: #666;
+				font-size: 14px;
+				font-weight: 500;
+				white-space: nowrap;
+			}
+
+			/* Empty State */
+			.empty-state {
+				text-align: center;
+				padding: 60px 20px;
+				color: #999;
+			}
+
+			.empty-state h3 {
+				font-size: 20px;
+				margin-bottom: 10px;
+				color: #666;
+			}
+
+			/* Responsive Design */
+			@media (max-width: 768px) {
+				.header {
+					flex-direction: column;
+					align-items: flex-start;
+				}
+
+				.container {
+					margin: 20px auto;
+				}
+
+				.filter-section {
+					flex-direction: column;
+				}
+
+				.search-box {
+					min-width: 100%;
+				}
+
+				th, td {
+					padding: 12px 16px;
+					font-size: 13px;
+				}
+
+				.table-header {
+					padding: 15px 20px;
+				}
+
+				.header h1 {
+					font-size: 24px;
+				}
+
+				.action-buttons {
+					flex-direction: column;
+				}
+
+				.btn {
+					width: 100%;
+					text-align: center;
+				}
+
+				.pagination-container {
+					flex-direction: column;
+					gap: 20px;
+				}
+
+				.pagination {
+					justify-content: center;
+				}
+			}
+		</style>
 	</head>
 	<body>
-		<h1>All users</h1>
+		<!-- Navigation Bar -->
+		<div class="navbar">
+			<h2>👥 Dishare Users</h2>
+		</div>
+
+		<!-- Main Container -->
+		<div class="container">
+			<div class="header">
+				<h1>All Users</h1>
+			</div>
+
+			<!-- Filter Section -->
+			<div class="filter-section">
+				<div class="search-box">
+					<input type="text" id="searchInput" placeholder="Search users by name...">
+				</div>
+			</div>
+
+			<!-- Users Table -->
+			<div class="table-container">
+				<div class="table-header">
+					<h2>User List</h2>
+				</div>
+				<table id="usersTable">
+					<thead>
+						<tr>
+							<th>User Name</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody id="tableBody">
+						<!-- Table rows will be populated by JavaScript -->
+					</tbody>
+				</table>
+			</div>
+
+			<!-- Pagination -->
+			<div class="pagination-container">
+				<span class="page-info">
+					Showing <span id="startEntry">1</span>-<span id="endEntry">20</span> of <span id="totalEntries">47</span> users
+				</span>
+				<div class="pagination" id="paginationControls">
+					<!-- Pagination buttons will be populated by JavaScript -->
+				</div>
+			</div>
+		</div>
+
+		<script>
+			// Sample user data (47 users, alphabetically sorted)
+			const usersData = [
+				{ id: 1, name: 'Aisha Al-Mansouri' },
+				{ id: 2, name: 'Ahmed Hassan' },
+				{ id: 3, name: 'Anne Laurent' },
+				{ id: 4, name: 'Anna Kowalski' },
+				{ id: 5, name: 'Antonio Sabato' },
+				{ id: 6, name: 'Arun Singh' },
+				{ id: 7, name: 'Budi Santoso' },
+				{ id: 8, name: 'Carlos Martinez' },
+				{ id: 9, name: 'Carlos Mendez' },
+				{ id: 10, name: 'Ceviche' },
+				{ id: 11, name: 'Christina Vasilis' },
+				{ id: 12, name: 'Dave Thompson' },
+				{ id: 13, name: 'Diego Rodriguez' },
+				{ id: 14, name: 'Dimitri Papadimitriou' },
+				{ id: 15, name: 'Emma Wilson' },
+				{ id: 16, name: 'Eva Kovacs' },
+				{ id: 17, name: 'Fatima Al-Zahara' },
+				{ id: 18, name: 'Fernando Lopez' },
+				{ id: 19, name: 'Fernando Morales' },
+				{ id: 20, name: 'Giulia Morelli' },
+				{ id: 21, name: 'George Papadakis' },
+				{ id: 22, name: 'Giovanni Rossi' },
+				{ id: 23, name: 'Giulia Gavi' },
+				{ id: 24, name: 'Hans Mueller' },
+				{ id: 25, name: 'Hideo Nakamura' },
+				{ id: 26, name: 'Isabella Romano' },
+				{ id: 27, name: 'James Brown' },
+				{ id: 28, name: 'Jasmine Cooper' },
+				{ id: 29, name: 'Jean Dupont' },
+				{ id: 30, name: 'Ji-hoon Park' },
+				{ id: 31, name: 'John Smith' },
+				{ id: 32, name: 'Leila Mansour' },
+				{ id: 33, name: 'Li Wei' },
+				{ id: 34, name: 'Linh Nguyen' },
+				{ id: 35, name: 'Lucia Ferrari' },
+				{ id: 36, name: 'Margaret O\'Brien' },
+				{ id: 37, name: 'Marco Rossi' },
+				{ id: 38, name: 'Maria Santos' },
+				{ id: 39, name: 'Maya Krishnan' },
+				{ id: 40, name: 'Michael Johnson' },
+				{ id: 41, name: 'Miguel Santos' },
+				{ id: 42, name: 'Min Ji Park' },
+				{ id: 43, name: 'Mustafa Yilmaz' },
+				{ id: 44, name: 'Niran Chandra' },
+				{ id: 45, name: 'Omar Al-Rashid' },
+				{ id: 46, name: 'Paolo Gavi' },
+				{ id: 47, name: 'Porn Chutiwat' }
+			].sort((a, b) => a.name.localeCompare(b.name));
+
+			const ENTRIES_PER_PAGE = 20;
+			let currentPage = 1;
+			let filteredUsers = [...usersData];
+
+			// Initialize the page
+			function initializeTable() {
+				displayTable();
+				setupPagination();
+			}
+
+			// Display table rows
+			function displayTable() {
+				const startIndex = (currentPage - 1) * ENTRIES_PER_PAGE;
+				const endIndex = startIndex + ENTRIES_PER_PAGE;
+				const pageUsers = filteredUsers.slice(startIndex, endIndex);
+
+				const tableBody = document.getElementById('tableBody');
+				tableBody.innerHTML = '';
+
+				if (pageUsers.length === 0) {
+					tableBody.innerHTML = '<tr><td colspan="2" style="text-align: center; padding: 40px;">No users found</td></tr>';
+					return;
+				}
+
+				pageUsers.forEach((user) => {
+					const row = `
+						<tr>
+							<td class="user-name">${escapeHtml(user.name)}</td>
+							<td class="action-buttons">
+								<button class="btn btn-view" onclick="viewUser(${user.id})">View User</button>
+							</td>
+						</tr>
+					`;
+					tableBody.innerHTML += row;
+				});
+
+				// Update pagination info
+				document.getElementById('startEntry').textContent = startIndex + 1;
+				document.getElementById('endEntry').textContent = Math.min(endIndex, filteredUsers.length);
+				document.getElementById('totalEntries').textContent = filteredUsers.length;
+			}
+
+			// Setup pagination controls
+			function setupPagination() {
+				const totalPages = Math.ceil(filteredUsers.length / ENTRIES_PER_PAGE);
+				const paginationControls = document.getElementById('paginationControls');
+				paginationControls.innerHTML = '';
+
+				// Previous button
+				if (currentPage > 1) {
+					const prevBtn = `<a href="#" onclick="goToPage(${currentPage - 1}); return false;">← Previous</a>`;
+					paginationControls.innerHTML += prevBtn;
+				} else {
+					paginationControls.innerHTML += '<span class="disabled">← Previous</span>';
+				}
+
+				// Page numbers
+				const maxVisiblePages = 5;
+				let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+				let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+				startPage = Math.max(1, endPage - maxVisiblePages + 1);
+
+				if (startPage > 1) {
+					paginationControls.innerHTML += '<a href="#" onclick="goToPage(1); return false;">1</a>';
+					if (startPage > 2) {
+						paginationControls.innerHTML += '<span style="color: #999;">...</span>';
+					}
+				}
+
+				for (let i = startPage; i <= endPage; i++) {
+					if (i === currentPage) {
+						paginationControls.innerHTML += `<span class="active">${i}</span>`;
+					} else {
+						paginationControls.innerHTML += `<a href="#" onclick="goToPage(${i}); return false;">${i}</a>`;
+					}
+				}
+
+				if (endPage < totalPages) {
+					if (endPage < totalPages - 1) {
+						paginationControls.innerHTML += '<span style="color: #999;">...</span>';
+					}
+					paginationControls.innerHTML += `<a href="#" onclick="goToPage(${totalPages}); return false;">${totalPages}</a>`;
+				}
+
+				// Next button
+				if (currentPage < totalPages) {
+					const nextBtn = `<a href="#" onclick="goToPage(${currentPage + 1}); return false;">Next →</a>`;
+					paginationControls.innerHTML += nextBtn;
+				} else {
+					paginationControls.innerHTML += '<span class="disabled">Next →</span>';
+				}
+			}
+
+			// Go to specific page
+			function goToPage(page) {
+				const totalPages = Math.ceil(filteredUsers.length / ENTRIES_PER_PAGE);
+				if (page >= 1 && page <= totalPages) {
+					currentPage = page;
+					displayTable();
+					setupPagination();
+					window.scrollTo(0, 0);
+				}
+			}
+
+			// View user
+			function viewUser(id) {
+				console.log('Viewing user with ID:', id);
+				// Replace with actual navigation
+				// window.location.href = '/user/' + id;
+			}
+
+			// Search functionality
+			document.getElementById('searchInput').addEventListener('input', function(e) {
+				const searchTerm = e.target.value.toLowerCase();
+				filteredUsers = usersData.filter(user => 
+					user.name.toLowerCase().includes(searchTerm)
+				);
+				currentPage = 1;
+				displayTable();
+				setupPagination();
+			});
+
+			// Helper function to escape HTML
+			function escapeHtml(text) {
+				const map = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'};
+				return text.replace(/[&<>"']/g, m => map[m]);
+			}
+
+			// Initialize on load
+			window.addEventListener('DOMContentLoaded', initializeTable);
+		</script>
 	</body>
 </html>

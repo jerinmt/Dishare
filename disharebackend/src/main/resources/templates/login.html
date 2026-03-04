@@ -1,9 +1,260 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 	<head>
-		<title>Admin Login</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Admin Login - Dishare</title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
+			body {
+				font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				min-height: 100vh;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+
+			.login-container {
+				background: white;
+				padding: 40px;
+				border-radius: 8px;
+				box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+				width: 100%;
+				max-width: 400px;
+			}
+
+			.login-header {
+				text-align: center;
+				margin-bottom: 30px;
+			}
+
+			.login-header h1 {
+				color: #333;
+				font-size: 28px;
+				margin-bottom: 8px;
+			}
+
+			.login-header p {
+				color: #666;
+				font-size: 14px;
+			}
+
+			.form-group {
+				margin-bottom: 20px;
+			}
+
+			label {
+				display: block;
+				margin-bottom: 8px;
+				color: #333;
+				font-weight: 500;
+				font-size: 14px;
+			}
+
+			input[type="email"],
+			input[type="text"],
+			input[type="password"] {
+				width: 100%;
+				padding: 12px;
+				border: 1px solid #ddd;
+				border-radius: 4px;
+				font-size: 14px;
+				transition: border-color 0.3s;
+			}
+
+			input[type="email"]:focus,
+			input[type="text"]:focus,
+			input[type="password"]:focus {
+				outline: none;
+				border-color: #667eea;
+				box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+			}
+
+			.error-message {
+				color: #e74c3c;
+				font-size: 13px;
+				margin-top: 5px;
+				display: none;
+			}
+
+			.form-group.error input {
+				border-color: #e74c3c;
+			}
+
+			.form-group.error .error-message {
+				display: block;
+			}
+
+			.remember-me {
+				display: flex;
+				align-items: center;
+				margin-bottom: 20px;
+				font-size: 14px;
+			}
+
+			.remember-me input[type="checkbox"] {
+				margin-right: 8px;
+				cursor: pointer;
+			}
+
+			.remember-me label {
+				margin: 0;
+				font-weight: 400;
+				cursor: pointer;
+			}
+
+			.login-button {
+				width: 100%;
+				padding: 12px;
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				color: white;
+				border: none;
+				border-radius: 4px;
+				font-size: 16px;
+				font-weight: 600;
+				cursor: pointer;
+				transition: transform 0.2s, box-shadow 0.2s;
+			}
+
+			.login-button:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+			}
+
+			.login-button:active {
+				transform: translateY(0);
+			}
+
+			.alert {
+				padding: 12px;
+				border-radius: 4px;
+				margin-bottom: 20px;
+				font-size: 14px;
+				display: none;
+			}
+
+			.alert.show {
+				display: block;
+			}
+
+			.alert.error {
+				background-color: #f8d7da;
+				color: #721c24;
+				border: 1px solid #f5c6cb;
+			}
+
+			.alert.success {
+				background-color: #d4edda;
+				color: #155724;
+				border: 1px solid #c3e6cb;
+			}
+
+			.footer-text {
+				text-align: center;
+				margin-top: 20px;
+				font-size: 12px;
+				color: #999;
+			}
+
+			@media (max-width: 480px) {
+				.login-container {
+					padding: 30px 20px;
+				}
+
+				.login-header h1 {
+					font-size: 24px;
+				}
+			}
+		</style>
 	</head>
 	<body>
-		<h1>Admin Login</h1>
+		<div class="login-container">
+			<div class="login-header">
+				<h1>Admin Login</h1>
+				<p>Welcome to Dishare Admin Panel</p>
+			</div>
+
+			<div class="alert error" id="errorAlert"></div>
+			<div class="alert success" id="successAlert"></div>
+
+			<form id="loginForm" method="POST" action="/admin/login">
+				<div class="form-group">
+					<label for="email">Email Address</label>
+					<input type="email" id="email" name="email" placeholder="Enter your email" required>
+					<div class="error-message">Please enter a valid email address</div>
+				</div>
+
+				<div class="form-group">
+					<label for="password">Password</label>
+					<input type="password" id="password" name="password" placeholder="Enter your password" required>
+					<div class="error-message">Password is required</div>
+				</div>
+
+				<div class="remember-me">
+					<input type="checkbox" id="rememberMe" name="rememberMe">
+					<label for="rememberMe">Remember me</label>
+				</div>
+
+				<button type="submit" class="login-button">Sign In</button>
+			</form>
+
+			<div class="footer-text">
+				&copy; 2024 Dishare. All rights reserved.
+			</div>
+		</div>
+
+		<script>
+			const loginForm = document.getElementById('loginForm');
+			const emailInput = document.getElementById('email');
+			const passwordInput = document.getElementById('password');
+			const errorAlert = document.getElementById('errorAlert');
+
+			// Form validation
+			loginForm.addEventListener('submit', function(e) {
+				e.preventDefault();
+				
+				let isValid = true;
+				const emailGroup = emailInput.parentElement;
+				const passwordGroup = passwordInput.parentElement;
+
+				// Reset previous errors
+				emailGroup.classList.remove('error');
+				passwordGroup.classList.remove('error');
+				errorAlert.classList.remove('show');
+
+				// Validate email
+				const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+				if (!emailRegex.test(emailInput.value)) {
+					emailGroup.classList.add('error');
+					isValid = false;
+				}
+
+				// Validate password
+				if (passwordInput.value.trim() === '') {
+					passwordGroup.classList.add('error');
+					isValid = false;
+				}
+
+				if (isValid) {
+					// Submit the form to the server
+					loginForm.submit();
+				}
+			});
+
+			// Clear error on input
+			emailInput.addEventListener('input', function() {
+				this.parentElement.classList.remove('error');
+			});
+
+			passwordInput.addEventListener('input', function() {
+				this.parentElement.classList.remove('error');
+			});
+		</script>
 	</body>
 </html>

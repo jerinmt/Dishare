@@ -1,9 +1,506 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 	<head>
-		<title>View recipe</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Recipe Details - Dishare</title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
+			body {
+				font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+				background-color: #f5f7fa;
+			}
+
+			/* Navigation Bar */
+			.navbar {
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				padding: 15px 30px;
+				box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+				position: sticky;
+				top: 0;
+				z-index: 100;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+
+			.navbar h2 {
+				color: white;
+				font-size: 20px;
+				font-weight: 600;
+			}
+
+			.back-button {
+				padding: 10px 20px;
+				background: rgba(255, 255, 255, 0.2);
+				color: white;
+				border: 1px solid rgba(255, 255, 255, 0.3);
+				border-radius: 4px;
+				cursor: pointer;
+				font-size: 14px;
+				font-weight: 600;
+				transition: all 0.2s;
+				text-decoration: none;
+				display: inline-block;
+			}
+
+			.back-button:hover {
+				background: rgba(255, 255, 255, 0.3);
+			}
+
+			/* Main Container */
+			.container {
+				max-width: 1000px;
+				margin: 40px auto;
+				padding: 0 20px;
+			}
+
+			/* Recipe Header */
+			.recipe-header {
+				background: white;
+				border-radius: 8px;
+				overflow: hidden;
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+				margin-bottom: 30px;
+			}
+
+			.recipe-image {
+				width: 100%;
+				height: 400px;
+				object-fit: cover;
+				background: #f0f2f5;
+			}
+
+			.recipe-info {
+				padding: 30px;
+			}
+
+			.recipe-title {
+				font-size: 36px;
+				color: #333;
+				margin-bottom: 15px;
+				font-weight: 700;
+			}
+
+			.recipe-meta {
+				display: flex;
+				gap: 30px;
+				flex-wrap: wrap;
+				margin-bottom: 20px;
+				padding-bottom: 20px;
+				border-bottom: 2px solid #f0f2f5;
+			}
+
+			.meta-item {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+			}
+
+			.meta-label {
+				color: #666;
+				font-weight: 600;
+				font-size: 14px;
+				text-transform: uppercase;
+			}
+
+			.meta-value {
+				color: #667eea;
+				font-size: 16px;
+				font-weight: 700;
+			}
+
+			.difficulty-badge {
+				display: inline-block;
+				padding: 6px 14px;
+				border-radius: 20px;
+				font-weight: 600;
+				font-size: 13px;
+				text-transform: uppercase;
+			}
+
+			.difficulty-easy {
+				background: #d4edda;
+				color: #155724;
+			}
+
+			.difficulty-medium {
+				background: #fff3cd;
+				color: #856404;
+			}
+
+			.difficulty-hard {
+				background: #f8d7da;
+				color: #721c24;
+			}
+
+			.view-count {
+				color: #999;
+				font-size: 14px;
+				margin-top: 15px;
+				padding-top: 15px;
+				border-top: 1px solid #f0f2f5;
+			}
+
+			/* Content Sections */
+			.content-section {
+				background: white;
+				border-radius: 8px;
+				padding: 30px;
+				margin-bottom: 30px;
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+			}
+
+			.section-title {
+				font-size: 24px;
+				color: #333;
+				margin-bottom: 20px;
+				padding-bottom: 15px;
+				border-bottom: 3px solid #667eea;
+				font-weight: 700;
+				display: inline-block;
+			}
+
+			/* Ingredients Section */
+			.ingredients-list {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+				gap: 15px;
+			}
+
+			.ingredient-item {
+				display: flex;
+				align-items: flex-start;
+				gap: 12px;
+				padding: 12px;
+				background: #f9f9f9;
+				border-radius: 6px;
+				border-left: 4px solid #667eea;
+			}
+
+			.ingredient-checkbox {
+				margin-top: 3px;
+				cursor: pointer;
+				width: 18px;
+				height: 18px;
+				accent-color: #667eea;
+			}
+
+			.ingredient-text {
+				flex: 1;
+				color: #333;
+				font-size: 15px;
+				line-height: 1.4;
+			}
+
+			.ingredient-item input:checked ~ .ingredient-text {
+				color: #999;
+				text-decoration: line-through;
+			}
+
+			/* Steps Section */
+			.steps-list {
+				display: flex;
+				flex-direction: column;
+				gap: 20px;
+			}
+
+			.step-item {
+				display: flex;
+				gap: 20px;
+				padding: 20px;
+				background: #f9f9f9;
+				border-radius: 6px;
+				border-left: 4px solid #667eea;
+			}
+
+			.step-number {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: 40px;
+				height: 40px;
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				color: white;
+				font-weight: 700;
+				font-size: 18px;
+				border-radius: 50%;
+				flex-shrink: 0;
+			}
+
+			.step-content {
+				flex: 1;
+			}
+
+			.step-description {
+				color: #333;
+				font-size: 15px;
+				line-height: 1.6;
+			}
+
+			/* Action Buttons */
+			.action-buttons {
+				display: flex;
+				gap: 15px;
+				margin-top: 30px;
+				flex-wrap: wrap;
+			}
+
+			.btn {
+				padding: 12px 24px;
+				border: none;
+				border-radius: 4px;
+				cursor: pointer;
+				font-size: 14px;
+				font-weight: 600;
+				transition: all 0.2s;
+				text-decoration: none;
+				display: inline-block;
+			}
+
+			.btn-primary {
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				color: white;
+			}
+
+			.btn-primary:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+			}
+
+			.btn-secondary {
+				background: #e0e0e0;
+				color: #333;
+				border: 1px solid #ddd;
+			}
+
+			.btn-secondary:hover {
+				background: #d0d0d0;
+			}
+
+			/* Responsive Design */
+			@media (max-width: 768px) {
+				.recipe-image {
+					height: 250px;
+				}
+
+				.recipe-title {
+					font-size: 24px;
+				}
+
+				.recipe-meta {
+					gap: 15px;
+				}
+
+				.container {
+					margin: 20px auto;
+				}
+
+				.recipe-info {
+					padding: 20px;
+				}
+
+				.content-section {
+					padding: 20px;
+				}
+
+				.step-item {
+					gap: 15px;
+					padding: 15px;
+				}
+
+				.ingredients-list {
+					grid-template-columns: 1fr;
+				}
+
+				.action-buttons {
+					flex-direction: column;
+				}
+
+				.btn {
+					width: 100%;
+					text-align: center;
+				}
+
+				.navbar {
+					flex-direction: column;
+					gap: 15px;
+					align-items: flex-start;
+				}
+			}
+		</style>
 	</head>
 	<body>
-		<h1>Check a recipe</h1>
+		<!-- Navigation Bar -->
+		<div class="navbar">
+			<h2>🍳 Recipe Details</h2>
+			<a href="javascript:history.back()" class="back-button">← Back</a>
+		</div>
+
+		<!-- Main Container -->
+		<div class="container">
+			<!-- Recipe Header with Image -->
+			<div class="recipe-header">
+				<img src="https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=1000&h=400&fit=crop" alt="Spaghetti Carbonara" class="recipe-image">
+				<div class="recipe-info">
+					<h1 class="recipe-title">Spaghetti Carbonara</h1>
+					
+					<div class="recipe-meta">
+						<div class="meta-item">
+							<span class="meta-label">Cooking Time:</span>
+							<span class="meta-value">25 minutes</span>
+						</div>
+						<div class="meta-item">
+							<span class="meta-label">Difficulty:</span>
+							<span class="difficulty-badge difficulty-medium">Medium</span>
+						</div>
+					</div>
+
+					<div class="view-count">
+						👁️ <strong>892</strong> people have viewed this recipe
+					</div>
+				</div>
+			</div>
+
+			<!-- Ingredients Section -->
+			<div class="content-section">
+				<h2 class="section-title">🥘 Ingredients</h2>
+				<div class="ingredients-list">
+					<div class="ingredient-item">
+						<input type="checkbox" class="ingredient-checkbox">
+						<span class="ingredient-text">400g spaghetti pasta</span>
+					</div>
+					<div class="ingredient-item">
+						<input type="checkbox" class="ingredient-checkbox">
+						<span class="ingredient-text">200g guanciale or pancetta, diced</span>
+					</div>
+					<div class="ingredient-item">
+						<input type="checkbox" class="ingredient-checkbox">
+						<span class="ingredient-text">4 large egg yolks</span>
+					</div>
+					<div class="ingredient-item">
+						<input type="checkbox" class="ingredient-checkbox">
+						<span class="ingredient-text">100g Pecorino Romano cheese, grated</span>
+					</div>
+					<div class="ingredient-item">
+						<input type="checkbox" class="ingredient-checkbox">
+						<span class="ingredient-text">100g Parmesan cheese, grated</span>
+					</div>
+					<div class="ingredient-item">
+						<input type="checkbox" class="ingredient-checkbox">
+						<span class="ingredient-text">2 teaspoons black pepper</span>
+					</div>
+					<div class="ingredient-item">
+						<input type="checkbox" class="ingredient-checkbox">
+						<span class="ingredient-text">Salt to taste</span>
+					</div>
+					<div class="ingredient-item">
+						<input type="checkbox" class="ingredient-checkbox">
+						<span class="ingredient-text">2 liters water for pasta</span>
+					</div>
+				</div>
+			</div>
+
+			<!-- Cooking Steps Section -->
+			<div class="content-section">
+				<h2 class="section-title">👨‍🍳 Cooking Steps</h2>
+				<div class="steps-list">
+					<div class="step-item">
+						<div class="step-number">1</div>
+						<div class="step-content">
+							<p class="step-description">
+								Bring a large pot of salted water to a boil. Add the spaghetti and cook according to package directions until al dente (usually 9-10 minutes). Reserve 1 cup of pasta water before draining.
+							</p>
+						</div>
+					</div>
+
+					<div class="step-item">
+						<div class="step-number">2</div>
+						<div class="step-content">
+							<p class="step-description">
+								While the pasta cooks, cut the guanciale into small cubes. Heat a large skillet over medium heat and cook the guanciale until crispy, about 8-10 minutes. Remove from heat.
+							</p>
+						</div>
+					</div>
+
+					<div class="step-item">
+						<div class="step-number">3</div>
+						<div class="step-content">
+							<p class="step-description">
+								In a bowl, whisk together egg yolks, grated Pecorino Romano, Parmesan cheese, and freshly ground black pepper. The mixture should be creamy.
+							</p>
+						</div>
+					</div>
+
+					<div class="step-item">
+						<div class="step-number">4</div>
+						<div class="step-content">
+							<p class="step-description">
+								Add the drained hot pasta to the skillet with guanciale (off heat). Slowly pour the egg mixture over the pasta while continuously stirring to coat evenly.
+							</p>
+						</div>
+					</div>
+
+					<div class="step-item">
+						<div class="step-number">5</div>
+						<div class="step-content">
+							<p class="step-description">
+								If the sauce seems too thick, add reserved pasta water a little at a time, stirring continuously. The residual heat will cook the eggs without scrambling them.
+							</p>
+						</div>
+					</div>
+
+					<div class="step-item">
+						<div class="step-number">6</div>
+						<div class="step-content">
+							<p class="step-description">
+								Divide the spaghetti carbonara into serving bowls and serve immediately while hot. Garnish with additional cheese and freshly cracked black pepper to taste.
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Action Buttons -->
+			<div class="action-buttons">
+				<button class="btn btn-primary">👍 Like This Recipe</button>
+				<button class="btn btn-primary">📧 Share Recipe</button>
+				<button class="btn btn-secondary">💬 Leave a Comment</button>
+			</div>
+		</div>
+
+		<script>
+			// Add click handlers for buttons
+			document.querySelectorAll('.btn').forEach(button => {
+				button.addEventListener('click', function() {
+					const text = this.textContent.trim();
+					console.log('Clicked:', text);
+					
+					if (text.includes('Like')) {
+						alert('Recipe liked! ❤️');
+					} else if (text.includes('Share')) {
+						alert('Share functionality coming soon!');
+					} else if (text.includes('Comment')) {
+						alert('Comment section coming soon!');
+					}
+				});
+			});
+
+			// Ingredient checkbox interaction
+			document.querySelectorAll('.ingredient-checkbox').forEach(checkbox => {
+				checkbox.addEventListener('change', function() {
+					if (this.checked) {
+						this.parentElement.style.opacity = '0.6';
+					} else {
+						this.parentElement.style.opacity = '1';
+					}
+				});
+			});
+		</script>
 	</body>
 </html>
