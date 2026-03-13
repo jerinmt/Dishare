@@ -1,0 +1,89 @@
+/* Profile Edit page styles (matches UserProfile theme) */
+.profile-edit-page {
+  max-width: 900px;
+  margin: 120px auto 40px; /* offset for fixed navbar */
+  padding: 0 20px;
+}
+
+.profile-edit-container {
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.profile-edit-title {
+  margin-bottom: 10px;
+}
+
+.profile-edit-subtitle {
+  margin-top: 0;
+}
+
+.profile-edit-container form {
+  margin-top: 10px;
+}
+
+.profile-edit-container form > div {
+  margin-bottom: 15px;
+}
+
+.profile-edit-container label {
+  display: block;
+  margin-bottom: 6px;
+  color: #555;
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.profile-edit-container input,
+.profile-edit-container textarea {
+  width: 100%;
+  padding: 12px 12px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  background: white;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.profile-edit-container textarea {
+  resize: vertical;
+  min-height: 92px;
+}
+
+.profile-edit-container input:focus,
+.profile-edit-container textarea:focus {
+  border-color: rgba(102, 126, 234, 0.7);
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+}
+
+.profile-edit-actions {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.profile-edit-actions .btn {
+  padding: 14px 22px;
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  .profile-edit-container {
+    padding: 22px;
+  }
+
+  .profile-edit-actions {
+    justify-content: stretch;
+  }
+
+  .profile-edit-actions .btn {
+    width: 100%;
+    text-align: center;
+  }
+}

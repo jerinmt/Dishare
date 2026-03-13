@@ -53,6 +53,18 @@
   font-size: 18px;
 }
 
+.btn-sign {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 16px 32px;
+  font-size: 18px;
+}
+
+.btn-sign:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
 .btn-secondary {
   background: transparent;
   color: white;
@@ -68,6 +80,52 @@
 
 .btn-secondary:hover {
   background: rgba(255, 255, 255, 0.1);
+}
+
+.btn-remove {
+  background: #f44336;
+  color: white;
+  padding: 16px 32px;
+  font-size: 18px;
+}
+
+.btn-remove:hover {
+  transform: translateY(-2px);
+}
+/* Small icon buttons (e.g. +) */
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.9);
+  color: #667eea;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.icon-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+  background: white;
+}
+
+.fieldset-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.fieldset-header label {
+  margin: 0;
 }
 
 /* Navbar */
@@ -115,6 +173,30 @@
 
 .nav-link.btn-outline {
   border: 2px solid white;
+}
+
+.nav-toggle {
+  display: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 8px;
+  margin-left: auto;
+  height: auto;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px;
+  border: none;
+}
+
+.nav-toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  border-radius: 999px;
+  margin: 0;
+  border: 2px solid white;
+  transition: transform 0.2s, opacity 0.2s;
 }
 
 /* Features Section */
@@ -317,13 +399,41 @@
 .profile-bio {
   font-size: 16px;
   margin-bottom: 30px;
-  color: #555;
+  color: #fff;
 }
 
 .search-container {
   max-width: 1000px;
   margin: 120px auto 40px;
   padding: 0 20px;
+}
+
+/* generic static page container (About, Contact, Terms, etc.) */
+.static-page-container {
+  max-width: 900px;
+  margin: 120px auto 40px;
+  padding: 0 20px 40px;
+  color: #333;
+}
+
+.static-page-section {
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 12px;
+  padding: 30px 26px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(10px);
+}
+
+.static-page-section h3 {
+  margin-top: 22px;
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+.static-page-section p {
+  margin-bottom: 12px;
+  line-height: 1.6;
+  font-size: 15px;
 }
 
 /* recipe list & card */
@@ -369,6 +479,41 @@
   font-size: 16px;
 }
 
+.explore-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+  margin-top: 16px;
+  margin-bottom: 8px;
+}
+
+.sort-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-width: 180px;
+}
+
+.sort-wrapper label {
+  color: white;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.sort-select {
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: rgba(0, 0, 0, 0.15);
+  color: white;
+  font-size: 14px;
+  outline: none;
+}
+
+.sort-select option {
+  color: #333;
+}
+
 /* user image */
 .user-image-wrapper {
   display: flex;
@@ -408,14 +553,23 @@
 @media (max-width: 768px) {
   .navbar {
     padding: 15px 20px;
-    flex-direction: column;
-    gap: 15px;
+  }
+
+  .nav-toggle {
+    display: inline-flex;
   }
 
   .nav-links {
-    gap: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 10px;
+    width: 100%;
+  }
+
+  .nav-links.nav-links--open {
+    display: flex;
   }
 
   .hero {

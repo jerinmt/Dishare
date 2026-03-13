@@ -1,13 +1,18 @@
 import React from 'react';
 import Navbar from './Navbar.jsx';
 import Footer from './Footer.jsx';
+import './ProfileEdit.css';
 
 const ProfileEdit = () => {
   return (
     <>
       <Navbar />
-      <div className="profile-form-container">
-        <h2 className="page-title">Edit Profile</h2>
+      <div className="profile-edit-page">
+        <div className="profile-edit-container">
+          <h2 className="page-title profile-edit-title">Edit Profile</h2>
+          <p className="page-subtitle profile-edit-subtitle">
+            Update your details and profile picture.
+          </p>
         <form>
           <div>
             <label htmlFor="name">Name:</label>
@@ -29,8 +34,13 @@ const ProfileEdit = () => {
             <label htmlFor="image">Profile Picture URL:</label>
             <input type="text" id="image" name="image" />
           </div>
-          <button type="submit" className="btn btn-primary">Save Changes</button>
+          <div className="profile-edit-actions">
+            <button type="submit" className="btn btn-primary">
+              Save Changes
+            </button>
+          </div>
         </form>
+        </div>
       </div>
       <Footer />
     </>

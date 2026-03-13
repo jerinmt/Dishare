@@ -8,6 +8,9 @@ import EditRecipe from "../components/EditRecipe";
 import ProfileEdit from "../components/ProfileEdit";
 import SearchResults from "../components/SearchResults";
 import ViewRecipe from "../components/ViewRecipe";
+import About from "../components/About";
+import Contact from "../components/Contact";
+import Terms from "../components/Terms";
 
 // Dummy data used to visually fill pages
 const sampleRecipes = [
@@ -16,18 +19,27 @@ const sampleRecipes = [
     title: "Creamy Garlic Pasta",
     imageUrl:
       "https://images.pexels.com/photos/1437267/pexels-photo-1437267.jpeg",
+    viewCount: 1284,
+    likes: 260,
+    createdAt: "2024-03-01T10:00:00Z",
   },
   {
     id: 2,
     title: "Classic Margherita Pizza",
     imageUrl:
       "https://images.pexels.com/photos/1580466/pexels-photo-1580466.jpeg",
+    viewCount: 3420,
+    likes: 480,
+    createdAt: "2024-03-05T15:30:00Z",
   },
   {
     id: 3,
     title: "Berry Breakfast Bowl",
     imageUrl:
       "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg",
+    viewCount: 890,
+    likes: 190,
+    createdAt: "2024-02-20T08:15:00Z",
   },
 ];
 
@@ -75,6 +87,9 @@ const router = createBrowserRouter([
   { path: "/profile/edit/:id", element: <ProfileEdit /> },
   { path: "/search", element: <SearchResults recipes={sampleRecipes} /> },
   { path: "/recipe/:id", element: <ViewRecipe recipe={sampleRecipeDetail} /> },
+  { path: "/about", element: <About /> },
+  { path: "/contact", element: <Contact /> },
+  { path: "/terms-of-service", element: <Terms /> },
 ]);
 
 export default router;

@@ -11,14 +11,8 @@ const Footer = () => {
           <a href="/contact" className="footer-link">
             Contact
           </a>
-          <a href="/privacy" className="footer-link">
-            Privacy Policy
-          </a>
-          <a href="/terms" className="footer-link">
+          <a href="/terms-of-service" className="footer-link">
             Terms of Service
-          </a>
-          <a href="/help" className="footer-link">
-            Help
           </a>
         </div>
         <p className="footer-copy">

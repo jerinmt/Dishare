@@ -21,7 +21,7 @@ const Signup = () => {
             <label htmlFor="password">Password:</label>
             <input type="password" id="password" name="password" />
           </div>
-          <button type="submit" className="btn btn-primary">Sign Up</button>
+          <button type="submit" className="btn btn-primary btn-sign">Sign Up</button>
         </form>
       </div>
       <Footer />
