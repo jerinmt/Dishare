@@ -1,35 +1,37 @@
 package com.example.disharebackend.controllers;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.stereotype.Controller;
 @Controller
+@RequestMapping("/admin")
 public class AdminController {
 
-    @GetMapping("/admin/login")
+    @GetMapping("/login")
     public String adminLogin() {
         return "login";
     }
-    @GetMapping("/admin/home")
+    @GetMapping("/home")
     public String adminHome() {
         return "home";
     }
-    @GetMapping("/admin/report")
+    @GetMapping("/report")
     public String adminReport() {
         return "report";
     }
-    @GetMapping("/admin/recipes")
+    @GetMapping("/recipes")
     public String adminRecipes() {
         return "recipes";
     }
-    @GetMapping("/admin/users")
+    @GetMapping("/users")
     public String adminUsers() {
         return "users";
     }
-    @GetMapping("/admin/recipe/{id}")
+    @GetMapping("/recipe/{id}")
     public String adminViewRecipe() {
         return "viewRecipe";
     }
-    @GetMapping("/admin/user/{id}")
+    @GetMapping("/user/{id}")
     public String adminViewUser() {
         return "viewUser";
     }
