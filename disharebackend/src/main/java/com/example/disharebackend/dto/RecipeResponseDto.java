@@ -1,50 +1,24 @@
-package com.example.disharebackend.models;
+package com.example.disharebackend.dto;
 
-import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
-import jakarta.persistence.*;
 
-
-@Entity
-@Table(name = "recipes")
-public class Recipes {
-   
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class RecipeResponseDto {
     private Long id;
-   
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "users_id", nullable = false)
-    private Users user;
-    //search infinite recursion foreign key in API
-    
-    
     private String name;
     private String image;
     private String cookingTime;
     private String difficulty;
-    private Integer views = 0;
-    private Integer likes = 0;
-    @CreationTimestamp
+    private Integer views;
+    private Integer likes;
     private LocalDateTime createdDate;
     private String steps;
     private String ingredients;
+    private Long userId;
+    private String username;
 
-    public Recipes() {
-    	super();
+    public RecipeResponseDto() {
     }
-    
-    public Recipes(String name, String image, String cookingTime, String difficulty, String steps, String ingredients, Users user) {
-    	this.name = name;
-    	this.image = image;
-    	this.cookingTime = cookingTime;
-    	this.difficulty = difficulty;
-    	this.steps = steps;
-    	this.ingredients = ingredients;
-    	this.user = user;
-    }
-    
-    // Getters and Setters
+
     public Long getId() {
         return id;
     }
@@ -84,7 +58,7 @@ public class Recipes {
     public void setDifficulty(String difficulty) {
         this.difficulty = difficulty;
     }
-    
+
     public Integer getViews() {
         return views;
     }
@@ -92,37 +66,13 @@ public class Recipes {
     public void setViews(Integer views) {
         this.views = views;
     }
-    
+
     public Integer getLikes() {
         return likes;
     }
 
     public void setLikes(Integer likes) {
         this.likes = likes;
-    }
-    
-    public String getIngredients() {
-        return ingredients;
-    }
-
-    public void setIngredients(String ingredients) {
-        this.ingredients = ingredients;
-    }
-    
-    public String getSteps() {
-        return steps;
-    }
-
-    public void setSteps(String steps) {
-        this.steps = steps;
-    }
-
-    public Users getUser() {
-        return user;
-    }
-
-    public void setUser(Users user) {
-        this.user = user;
     }
 
     public LocalDateTime getCreatedDate() {
@@ -131,5 +81,37 @@ public class Recipes {
 
     public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public String getSteps() {
+        return steps;
+    }
+
+    public void setSteps(String steps) {
+        this.steps = steps;
+    }
+
+    public String getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(String ingredients) {
+        this.ingredients = ingredients;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

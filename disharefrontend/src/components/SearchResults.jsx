@@ -1,4 +1,7 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { searchRecipes, likeRecipe, clearError } from '../store/recipeSlice';
 import Navbar from './Navbar.jsx';
 import Footer from './Footer.jsx';
 import Searchbar from './Searchbar.jsx';
@@ -10,24 +13,46 @@ const SORT_OPTIONS = [
   { value: 'mostLikes', label: 'Most likes' },
 ];
 
-const SearchResults = ({ recipes = [] }) => {
+const SearchResults = () => {
+  const [searchParams] = useSearchParams();
+  const dispatch = useDispatch();
+  const keyword = searchParams.get('q') || '';
+  const { searchResults: recipes = [], loading, error } = useSelector((state) => state.recipes);
   const [sortBy, setSortBy] = useState('mostRecent');
+
+  // Fetch search results when keyword changes
+  useEffect(() => {
+    if (keyword.trim()) {
+      dispatch(searchRecipes(keyword));
+    } else {
+      dispatch(clearError());
+    }
+  }, [keyword, dispatch]);
 
   const sortedRecipes = useMemo(() => {
     const list = [...recipes];
     return list.sort((a, b) => {
       if (sortBy === 'mostViews') {
-        return (b.viewCount || 0) - (a.viewCount || 0);
+        return (b.views || 0) - (a.views || 0);
       }
       if (sortBy === 'mostLikes') {
         return (b.likes || 0) - (a.likes || 0);
       }
-      // mostRecent (fallback if missing dates)
-      const aTime = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-      const bTime = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      // mostRecent (default sorting)
+      const aTime = a.createdDate ? new Date(a.createdDate).getTime() : 0;
+      const bTime = b.createdDate ? new Date(b.createdDate).getTime() : 0;
       return bTime - aTime;
     });
   }, [recipes, sortBy]);
+
+  const handleLike = async (recipeId) => {
+    try {
+      await dispatch(likeRecipe(recipeId)).unwrap();
+    } catch (err) {
+      console.error('Failed to like recipe:', err);
+      // Optionally show error to user
+    }
+  };
 
   return (
     <>
@@ -35,6 +60,9 @@ const SearchResults = ({ recipes = [] }) => {
       <div className="search-container">
         <h2 className="page-title">Explore Recipes</h2>
         <p className="page-subtitle">Discover popular and recent recipes from the community.</p>
+
+        {error && <div className="error-message">{error}</div>}
+        {loading && <p>Searching...</p>}
 
         <div className="explore-toolbar">
           <Searchbar />
@@ -55,7 +83,12 @@ const SearchResults = ({ recipes = [] }) => {
           </div>
         </div>
 
-        <RecipeList recipes={sortedRecipes} />
+        {keyword && recipes.length === 0 && !loading && (
+          <p>No recipes found for "{keyword}"</p>
+        )}
+        {!keyword && <p>Enter a search query to find recipes</p>}
+
+        <RecipeList recipes={sortedRecipes} onLike={handleLike} />
       </div>
       <Footer />
     </>

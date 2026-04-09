@@ -1,11 +1,11 @@
 import React from 'react';
 import RecipeCard from './RecipeCard.jsx';
 
-const RecipeList = ({ recipes = [] }) => {
+const RecipeList = ({ recipes = [], onLike }) => {
   return (
     <div className="recipe-list">
       {recipes.map((r, idx) => (
-        <RecipeCard key={r.id || idx} recipe={r} />
+        <RecipeCard key={r.id || idx} recipe={r} onLike={onLike} />
       ))}
     </div>
   );

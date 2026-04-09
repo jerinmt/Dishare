@@ -1,20 +1,31 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../store/authSlice';
+import { authService } from '../utils/apiClient';
 
 const Navbar = () => {
-  // TODO: Replace with real auth state when backend is connected
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const currentUser = useSelector((state) => state.auth.user);
+  const isLoggedIn = Boolean(currentUser);
+  const homeLink = currentUser?.id ? `/profile/${currentUser.id}` : '/';
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const handleLogout = () => {
-    // placeholder logout behaviour
-    setIsLoggedIn(false);
-    console.log('Logged out');
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+    } catch (error) {
+      console.error('Logout request failed:', error);
+    }
+    dispatch(logout());
+    setMenuOpen(false);
+    navigate('/');
   };
 
   return (
     <nav className="navbar">
-      <Link to="/" className="navbar-logo">
+      <Link to={homeLink} className="navbar-logo">
         🍳 Dishare
       </Link>
       <button
@@ -28,7 +39,7 @@ const Navbar = () => {
         <span />
       </button>
       <div className={`nav-links ${menuOpen ? 'nav-links--open' : ''}`}>
-        <Link to="/" className="nav-link" onClick={() => setMenuOpen(false)}>
+        <Link to={homeLink} className="nav-link" onClick={() => setMenuOpen(false)}>
           Home
         </Link>
         {isLoggedIn && (

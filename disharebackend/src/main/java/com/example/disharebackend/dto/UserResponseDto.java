@@ -1,46 +1,19 @@
-package com.example.disharebackend.models;
+package com.example.disharebackend.dto;
 
-import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
-@Entity
-@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
-public class Users {
-   
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class UserResponseDto {
     private Long id;
-   
-    @Column(nullable = false)
     private String username;
-    
-    
     private String email;
-    
-    @JsonIgnore
-    private String password;
     private String bio;
     private String pic;
     private Boolean isBlocked;
-    @CreationTimestamp
     private LocalDateTime joinDate;
-    @JsonIgnore
-    private String token;
 
-    public Users() {
-        super();
+    public UserResponseDto() {
     }
 
-    public Users(String username, String email, String password) {
-        this.username = username;
-    	this.email = email;
-        this.password = password;
-        this.isBlocked = false;
-    }
-    
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -65,14 +38,6 @@ public class Users {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getBio() {
         return bio;
     }
@@ -80,6 +45,7 @@ public class Users {
     public void setBio(String bio) {
         this.bio = bio;
     }
+
     public String getPic() {
         return pic;
     }
@@ -87,6 +53,7 @@ public class Users {
     public void setPic(String pic) {
         this.pic = pic;
     }
+
     public Boolean getIsBlocked() {
         return isBlocked;
     }
@@ -94,20 +61,12 @@ public class Users {
     public void setIsBlocked(Boolean isBlocked) {
         this.isBlocked = isBlocked;
     }
-    
+
     public LocalDateTime getJoinDate() {
         return joinDate;
     }
 
     public void setJoinDate(LocalDateTime joinDate) {
         this.joinDate = joinDate;
-    }
-    
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 }

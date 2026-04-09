@@ -1,9 +1,18 @@
 import React, { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { createRecipe, clearError } from '../store/recipeSlice';
+import { getErrorMessage } from '../utils/apiClient';
 import Navbar from './Navbar.jsx';
 import Footer from './Footer.jsx';
 
 const CreateRecipe = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const userId = useSelector((state) => state.auth.user?.id);
+  const { loading, error } = useSelector((state) => state.recipes);
   const difficultyOptions = useMemo(() => ['Easy', 'Medium', 'Hard'], []);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const [form, setForm] = useState({
     title: '',
@@ -64,14 +73,46 @@ const CreateRecipe = () => {
     });
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    const payload = {
-      ...form,
-      ingredients: form.ingredients.map((s) => s.trim()).filter(Boolean),
-      steps: form.steps.map((s) => s.trim()).filter(Boolean),
-    };
-    console.log('Create recipe payload:', payload);
+    setSuccessMessage('');
+    dispatch(clearError());
+
+    if (!userId) {
+      alert('You must be logged in to create a recipe');
+      return;
+    }
+
+    const ingredients = form.ingredients.map((s) => s.trim()).filter(Boolean);
+    const steps = form.steps.map((s) => s.trim()).filter(Boolean);
+
+    if (!form.title || !form.cookingTime || ingredients.length === 0 || steps.length === 0) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
+    // Create FormData for multipart/form-data submission
+    const formData = new FormData();
+    formData.append('userId', userId);
+    formData.append('name', form.title);
+    formData.append('cookingTime', form.cookingTime);
+    formData.append('difficulty', form.difficulty);
+    formData.append('ingredients', ingredients.join('|')); // Join with delimiter
+    formData.append('steps', steps.join('|')); // Join with delimiter
+    if (form.imageFile) {
+      formData.append('image', form.imageFile);
+    }
+
+    try {
+      const result = await dispatch(createRecipe(formData)).unwrap();
+      setSuccessMessage('Recipe created successfully!');
+      setTimeout(() => {
+        navigate(`/recipe/${result.id}`);
+      }, 1000);
+    } catch (err) {
+      // Error is handled by Redux, just show it
+      console.error('Failed to create recipe:', err);
+    }
   };
 
   return (
@@ -80,6 +121,9 @@ const CreateRecipe = () => {
       <div className="recipe-form-container">
         <h2 className="page-title">Create New Recipe</h2>
         <p className="page-subtitle">Add your recipe details below.</p>
+
+        {error && <div className="error-message">{error}</div>}
+        {successMessage && <div className="success-message">{successMessage}</div>}
 
         <form onSubmit={onSubmit}>
           <div>
@@ -170,8 +214,8 @@ const CreateRecipe = () => {
             ))}
           </div>
 
-          <button type="submit" className="btn btn-primary">
-            Create Recipe
+          <button type="submit" className="btn btn-primary" disabled={loading}>
+            {loading ? 'Creating...' : 'Create Recipe'}
           </button>
         </form>
       </div>

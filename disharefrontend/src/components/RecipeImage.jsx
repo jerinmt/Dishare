@@ -1,4 +1,5 @@
 import React from 'react';
+import { getMediaUrl } from '../utils/apiClient';
 
 const RecipeImage = ({
   imageUrl,
@@ -7,6 +8,7 @@ const RecipeImage = ({
   difficulty,
   viewCount,
 }) => {
+  const imageSrc = getMediaUrl(imageUrl) || 'https://via.placeholder.com/600x400';
   // determine difficulty class
   const difficultyClass = {
     easy: 'difficulty-easy',
@@ -16,7 +18,7 @@ const RecipeImage = ({
 
   return (
     <div className="recipe-header">
-      <img src={imageUrl} alt={title} className="recipe-image" />
+      <img src={imageSrc} alt={title} className="recipe-image" />
       <div className="recipe-info">
         <h1 className="recipe-title">{title}</h1>
         <div className="recipe-meta">
