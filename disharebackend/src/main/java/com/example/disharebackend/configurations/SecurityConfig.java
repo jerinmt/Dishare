@@ -17,7 +17,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 
 import com.example.disharebackend.security.ApiAuthenticationFilter;
-import com.example.disharebackend.services.CustomUserDetailsService;
+import com.example.disharebackend.services.AdminDetailsService;
 
 @Configuration
 @EnableWebSecurity
@@ -27,7 +27,7 @@ public class SecurityConfig {
     ApiAuthenticationFilter apiAuthenticationFilter;
     
     @Autowired
-    CustomUserDetailsService customUserDetailsService;
+    AdminDetailsService adminDetailsService;
 
     @Bean
     public static PasswordEncoder passwordEncoder() {
@@ -56,14 +56,16 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/login", "/registration", "/css/**", "/js/**", "/uploads/**", "/api/**").permitAll() // Public endpoints
+                        .requestMatchers("/admin/login", "/registration", "/styles/**", "/css/**", "/js/**", "/uploads/**", "/api/**").permitAll() // Public endpoints
                         .anyRequest().authenticated()) 
                 .formLogin(form -> form
-                        .loginPage("/login").loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/create", true).permitAll()) // Form login settings
+                        .loginPage("/admin/login").loginProcessingUrl("/admin/login")
+                        .usernameParameter("email")
+                        .passwordParameter("password")
+                        .defaultSuccessUrl("/admin/home", true).permitAll()) // Form login settings
                 .logout(logout -> logout
                 		.logoutUrl("/logout")
-            		    .logoutSuccessUrl("/login?logout")
+            		    .logoutSuccessUrl("/admin/login?logout")
             		    .invalidateHttpSession(true)
             		    .clearAuthentication(true)
             		    .permitAll()
@@ -77,6 +79,6 @@ public class SecurityConfig {
 
     @Autowired
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(adminDetailsService).passwordEncoder(passwordEncoder());
     }
 }

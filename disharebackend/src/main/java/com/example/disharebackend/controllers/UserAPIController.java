@@ -49,8 +49,17 @@ public class UserAPIController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLoginRequest loginRequest) {
         Users existingUser = userRepository.findByEmail(loginRequest.getEmail());
+        
+        if (existingUser == null) {
+            return ResponseEntity.status(401).body(Map.of("error", "Invalid email or password. Please try again."));
+        }
+        
+        if (existingUser.getIsBlocked() != null && existingUser.getIsBlocked()) {
+            return ResponseEntity.status(403).body(Map.of("error", "You have been blocked. Contact Admin"));
+        }
+        
         String token = tokenGenerator.generateToken(loginRequest.getEmail(), loginRequest.getPassword());
-        if (token != null && existingUser != null) {
+        if (token != null) {
             return ResponseEntity.ok(Map.of(
                     "token", token,
                     "id", existingUser.getId(),

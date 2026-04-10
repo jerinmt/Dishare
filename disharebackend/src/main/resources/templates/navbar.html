@@ -1,1 +1,27 @@
-<nav></nav>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<body>
+		<div th:fragment="navbar(title, buttonHref='', buttonText='', buttonClass='back-button', titleType='h2')">
+			<div class="navbar">
+				<div class="navbar-brand">
+					<h1 th:if="${titleType == 'h1'}" th:text="${title}">Dashboard</h1>
+					<h2 th:if="${titleType != 'h1'}" th:text="${title}">Dashboard</h2>
+				</div>
+
+				<nav class="navbar-menu">
+					<a th:href="@{/admin/home}">Home</a>
+					<a th:href="@{/admin/report}">Report</a>
+					<a th:href="@{/admin/users}">Users</a>
+					<a th:href="@{/admin/recipes}">Recipes</a>
+				</nav>
+
+				<div class="navbar-actions">
+					<form th:action="@{/logout}" method="post" class="logout-form">
+						<button type="submit" class="logout-btn">Logout</button>
+					</form>
+					<a th:if="${buttonHref != ''}" th:href="${buttonHref}" th:class="${buttonClass}" th:text="${buttonText}"></a>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
